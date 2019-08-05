@@ -1,5 +1,6 @@
 # autoscaling-sample
 
+## 1. Using taints
 ```bash
 PROJECT=dev-datad-kubeadm-1729623135
 ZONE=asia-northeast1-a
