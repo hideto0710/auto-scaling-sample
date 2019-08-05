@@ -1,6 +1,7 @@
 # autoscaling-sample
 
 ## 1. Using taints
+### setup
 ```bash
 PROJECT=dev-datad-kubeadm-1729623135
 ZONE=asia-northeast1-a
@@ -47,6 +48,7 @@ gcloud container node-pools create large \
     --node-taints=app=job:NoSchedule
 ```
 
+### run jobs
 ```bash
 kubectl apply -f manifests/small.yaml
 kubectl wait --for=condition=complete --timeout=10m job/small-job
@@ -59,4 +61,11 @@ kubectl wait --for=condition=complete --timeout=10m job/medium-job
 kubectl apply -f manifests/large.yaml
 kubectl wait --for=condition=complete --timeout=10m job/large-job
 # scaling large-pool
+```
+
+### clean up
+```bash
+gcloud container clusters delete autoscale-sample \
+    --project ${PROJECT} \
+    --zone ${ZONE}
 ```
