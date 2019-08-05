@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: large-job
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: main
+        image: docker/whalesay:latest
+        command: ["cowsay"]
+        args: ["hello large"]
+        resources:
+          requests:
+            cpu: 6000m
+      tolerations:
+        - key: app
+          operator: Equal
+          value: job
+          effect: NoSchedule

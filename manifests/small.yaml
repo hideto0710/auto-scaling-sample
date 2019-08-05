@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: small-job
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: main
+        image: docker/whalesay:latest
+        command: ["cowsay"]
+        args: ["hello small"]
+        resources:
+          requests:
+            cpu: 500m
+      tolerations:
+      - key: app
+        operator: Equal
+        value: job
+        effect: NoSchedule
