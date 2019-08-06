@@ -15,10 +15,9 @@ gcloud container clusters create autoscale-sample \
     --min-nodes 0
 ```
 
-## Option 1: Using taints
+### Option 1: Using taints
 prevent to schedule `kube-dns` on worker node by adding `taints`
 
-### add node pool
 ```bash
 gcloud container node-pools create medium-pool \
     --project ${PROJECT} \
@@ -43,7 +42,36 @@ gcloud container node-pools create large-pool \
     --node-taints=app=job:NoSchedule
 ```
 
-### run jobs
+### Option 2: Using PDB
+enable rescheduling `kube-dns` on worker node by adding `pdb`
+
+```bash
+kubectl apply -f manifests/pdb.yaml
+```
+
+```bash
+gcloud container node-pools create medium-pool \
+    --project ${PROJECT} \
+    --zone ${ZONE} \
+    --machine-type n1-standard-4 \
+    --cluster autoscale-sample \
+    --num-nodes 1 \
+    --enable-autoscaling \
+    --max-nodes 2 \
+    --min-nodes 0
+
+gcloud container node-pools create large-pool \
+    --project ${PROJECT} \
+    --zone ${ZONE} \
+    --machine-type n1-standard-8 \
+    --cluster autoscale-sample \
+    --num-nodes 1 \
+    --enable-autoscaling \
+    --max-nodes 2 \
+    --min-nodes 0
+```
+
+## run jobs
 ```bash
 kubectl apply -f manifests/small.yaml
 kubectl wait --for=condition=complete --timeout=10m job/small-job
@@ -56,37 +84,6 @@ kubectl wait --for=condition=complete --timeout=10m job/medium-job
 kubectl apply -f manifests/large.yaml
 kubectl wait --for=condition=complete --timeout=10m job/large-job
 # scaling large-pool
-```
-
-## Option 2: Using PDB
-enable rescheduling `kube-dns` on worker node by adding `pdb`
-
-### configure pdb
-```bash
-kubectl apply -f manifests/pdb.yaml
-```
-
-### add node pool
-```bash
-gcloud container node-pools create medium-pool \
-    --project ${PROJECT} \
-    --zone ${ZONE} \
-    --machine-type n1-standard-4 \
-    --cluster autoscale-sample \
-    --num-nodes 1 \
-    --enable-autoscaling \
-    --max-nodes 2 \
-    --min-nodes 0
-
-gcloud container node-pools create large-pool \
-    --project ${PROJECT} \
-    --zone ${ZONE} \
-    --machine-type n1-standard-8 \
-    --cluster autoscale-sample \
-    --num-nodes 1 \
-    --enable-autoscaling \
-    --max-nodes 2 \
-    --min-nodes 0
 ```
 
 ## clean up
