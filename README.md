@@ -1,7 +1,6 @@
 # autoscaling-sample
 
-## 1. Using taints
-### setup
+## Setup
 ```bash
 PROJECT=dev-datad-kubeadm-1729623135
 ZONE=asia-northeast1-a
@@ -13,13 +12,15 @@ gcloud container clusters create autoscale-sample \
     --num-nodes 1 \
     --enable-autoscaling \
     --max-nodes 2 \
-    --min-nodes 0 \
-    --enable-autoupgrade \
-    --enable-autorepair \
-    --no-enable-basic-auth \
-    --metadata disable-legacy-endpoints=true
+    --min-nodes 0
+```
 
-gcloud container node-pools create medium \
+## Option 1: Using taints
+prevent to schedule `kube-dns` on worker node by adding `taints`
+
+### add node pool
+```bash
+gcloud container node-pools create medium-pool \
     --project ${PROJECT} \
     --zone ${ZONE} \
     --machine-type n1-standard-4 \
@@ -28,12 +29,9 @@ gcloud container node-pools create medium \
     --enable-autoscaling \
     --max-nodes 2 \
     --min-nodes 0 \
-    --enable-autoupgrade \
-    --enable-autorepair \
-    --metadata disable-legacy-endpoints=true \
     --node-taints=app=job:NoSchedule
 
-gcloud container node-pools create large \
+gcloud container node-pools create large-pool \
     --project ${PROJECT} \
     --zone ${ZONE} \
     --machine-type n1-standard-8 \
@@ -42,9 +40,6 @@ gcloud container node-pools create large \
     --enable-autoscaling \
     --max-nodes 2 \
     --min-nodes 0 \
-    --enable-autoupgrade \
-    --enable-autorepair \
-    --metadata disable-legacy-endpoints=true \
     --node-taints=app=job:NoSchedule
 ```
 
@@ -63,7 +58,38 @@ kubectl wait --for=condition=complete --timeout=10m job/large-job
 # scaling large-pool
 ```
 
-### clean up
+## Option 2: Using PDB
+enable rescheduling `kube-dns` on worker node by adding `pdb`
+
+### configure pdb
+```bash
+kubectl apply -f manifests/pdb.yaml
+```
+
+### add node pool
+```bash
+gcloud container node-pools create medium-pool \
+    --project ${PROJECT} \
+    --zone ${ZONE} \
+    --machine-type n1-standard-4 \
+    --cluster autoscale-sample \
+    --num-nodes 1 \
+    --enable-autoscaling \
+    --max-nodes 2 \
+    --min-nodes 0
+
+gcloud container node-pools create large-pool \
+    --project ${PROJECT} \
+    --zone ${ZONE} \
+    --machine-type n1-standard-8 \
+    --cluster autoscale-sample \
+    --num-nodes 1 \
+    --enable-autoscaling \
+    --max-nodes 2 \
+    --min-nodes 0
+```
+
+## clean up
 ```bash
 gcloud container clusters delete autoscale-sample \
     --project ${PROJECT} \

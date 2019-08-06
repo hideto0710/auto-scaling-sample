@@ -17,17 +17,17 @@ kube-system   prometheus-to-sd-lbhjf                                       1/1  
 ## medium
 ```
 NAMESPACE     NAME                                                         READY   STATUS    RESTARTS   AGE   IP            NODE           NOMINATED NODE
-kube-system   fluentd-gcp-v3.2.0-lrgq5                                     2/2     Running   0          56s   10.146.0.45   medium         <none>
-kube-system   kube-dns-b46cc9485-gkbvd                                     4/4     Running   0          54s   10.40.1.2     medium         <none>
-kube-system   kube-proxy-medium                                            1/1     Running   0          55s   10.146.0.45   medium         <none>
-kube-system   prometheus-to-sd-mfkv2                                       1/1     Running   0          56s   10.146.0.45   medium         <none>
+kube-system   fluentd-gcp-v3.2.0-lrgq5                                     2/2     Running   0          56s   10.146.0.45   medium-pool    <none>
+kube-system   kube-dns-b46cc9485-gkbvd                                     4/4     Running   0          54s   10.40.1.2     medium-pool    <none>
+kube-system   kube-proxy-medium                                            1/1     Running   0          55s   10.146.0.45   medium-pool    <none>
+kube-system   prometheus-to-sd-mfkv2                                       1/1     Running   0          56s   10.146.0.45   medium-pool    <none>
 ```
 
 ## large with taints
 ```
 NAMESPACE     NAME                                                         READY   STATUS    RESTARTS   AGE    IP            NODE           NOMINATED NODE
-kube-system   fluentd-gcp-v3.2.0-dgmkr                                     2/2     Running   0          34s    10.146.0.46   large          <none>
-kube-system   kube-proxy-large                                             1/1     Running   0          33s    10.146.0.46   large          <none>
+kube-system   fluentd-gcp-v3.2.0-dgmkr                                     2/2     Running   0          34s    10.146.0.46   large-pool     <none>
+kube-system   kube-proxy-large                                             1/1     Running   0          33s    10.146.0.46   large-pool     <none>
 ```
 
 ## Result
