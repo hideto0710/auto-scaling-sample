@@ -2,7 +2,7 @@
 
 ## Setup
 ```bash
-PROJECT=dev-datad-kubeadm-1729623135
+PROJECT=<YOUR PROJECT ID>
 ZONE=asia-northeast1-a
 
 gcloud container clusters create autoscale-sample \
